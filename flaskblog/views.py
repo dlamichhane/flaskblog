@@ -17,17 +17,13 @@ def index():
 @app.route('/posts/page/<int:page>')
 def posts(page):
 	count =  db.session.query(Post).count()
-	posts = Post.query.limit(PER_PAGE).offset(page)
+	offset = (page - 1) * PER_PAGE
+	posts = Post.query.limit(PER_PAGE).offset(offset)
+
 	if not posts and page != 1:
 		abort(404)
 	pagination = Pagination(page, PER_PAGE, count)
 	return render_template('posts.html', pagination=pagination, posts=posts)
-
-
-@app.route('/post/<int:id>')
-def post(id):
-	post = Post.query.filter_by(id=id).first()
-	return render_template('post.html', post=post)
 
 
 @login_manager.user_loader
@@ -59,6 +55,12 @@ def logout():
 	return redirect(url_for("index"))
 
 
+@app.route('/post/<int:id>')
+def post(id):
+    post = Post.query.filter_by(id=id).first()
+    return render_template('post.html', post=post)
+
+
 @app.route('/addpost', methods=["GET", "POST"])
 @login_required
 def addpost():
@@ -71,7 +73,6 @@ def addpost():
 			tags = [ Tag.query.filter_by(id=tag_id).first() for tag_id in form.tag.data ]
 			post = Post(form.title.data, form.text.data, tags)
 			db.session.add(post)
-			# # db.session.execute(posts_tags.insert(), params={"post_id": 1, "tag_id": 1})
       		db.session.commit()
       		flash('Posted successfully')
       		return render_template('index.html')
@@ -162,20 +163,6 @@ def delete_tag(id):
     db.session.delete(tag)
     db.session.commit()
     return render_template('tags.html', tags = Tag.query.all())
-
-
-@app.route('/users/', defaults={'page': 1})
-@app.route('/users/page/<int:page>')
-def show_users(page):
-    count = count_all_users()
-    users = get_users_for_page(page, PER_PAGE, count)
-    if not users and page != 1:
-        abort(404)
-    pagination = Pagination(page, PER_PAGE, count)
-    return render_template('users.html',
-        pagination=pagination,
-        users=users
-    )
 
 
 @app.route('/search', methods=['POST'])

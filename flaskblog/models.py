@@ -1,8 +1,7 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from werkzeug import generate_password_hash, check_password_hash
-import flask.ext.whooshalchemy as whooshalchemy
 from flaskblog import app
-
+from config import WHOOSH_ENABLED
 from math import ceil
 
 db = SQLAlchemy(app)
@@ -100,5 +99,6 @@ class Pagination(object):
                 yield num
                 last = num
 
-
-whooshalchemy.whoosh_index(app, Post)
+if WHOOSH_ENABLED:
+    import flask.ext.whooshalchemy as whooshalchemy
+    whooshalchemy.whoosh_index(app, Post)
