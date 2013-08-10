@@ -2,9 +2,10 @@ Flask==0.10.1
 Flask-Login==0.2.6
 Flask-WTF==0.8.4
 git+git://github.com/miguelgrinberg/Flask-WhooshAlchemy
-Jinja2==2.8
+Jinja2==2.6
 SQLAlchemy==0.9
 Werkzeug==0.10
+decorator==3.4.0
 gunicorn==0.17.2
 psycopg2==2.5
 sqlalchemy-migrate==0.7.2
