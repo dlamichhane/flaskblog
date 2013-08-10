@@ -1,0 +1,12 @@
+.entries li {
+	list-style:none;
+}
+
+span {
+    margin:0 60px;
+    background:#faf;
+}
+
+span:first-of-type{
+    margin-left:0;
+}

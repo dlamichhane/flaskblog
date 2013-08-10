@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+ 
+{% block content %}
+  <h2>Edit Post</h2>
+ 
+  {% for message in form.title.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+
+  {% for message in form.text.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+
+  <form action="{{ url_for('edit_post', id=post_id) }}" method="POST">
+    {{ form.hidden_tag() }}
+     <dl>
+        <dt> {{ form.title.label }}
+        <dd> {{ form.title }}
+        <dt> {{ form.text.label }}
+        <dd> {{ form.text }}
+        <dt> {{ form.tag.label }}
+        <dd> {{ form.tag }}
+        <dd> {{ form.submit }}
+     </dl>
+  </form>
+     
+{% endblock %}

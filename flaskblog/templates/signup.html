@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+ 
+{% block content %}
+  <h2>Sign up</h2>
+ 
+  {% for message in form.username.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+   
+  {% for message in form.email.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+   
+  {% for message in form.password.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+   
+  <form action="{{ url_for('signup') }}" method=post>
+    {{ form.hidden_tag() }}
+     <dl>
+       <dt>{{ form.username.label }}
+       <dd>{{ form.username }}</dd>
+       <dt>{{ form.email.label }}
+       <dd>{{ form.email }}</dd>
+       <dt>{{ form.password.label }}
+       <dd>{{ form.password }}</dd>
+       <dt>{{ form.role_type.label }}
+       <dd>{{ form.role_type }}</dd>
+       <dd>{{ form.submit }}</dd>
+     </dl>
+  </form>
+     
+{% endblock %}

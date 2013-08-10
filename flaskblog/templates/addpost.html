@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+ 
+{% block content %}
+  <h2>Add Post</h2>
+ 
+  {% for message in form.title.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+   
+  {% for message in form.text.errors %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+      
+  <form action="{{ url_for('addpost') }}" method=post>
+    {{ form.hidden_tag() }}
+     <dl>
+       <dt> {{ form.title.label }}
+       <dd> {{ form.title }}</dd>
+       <dt> {{ form.text.label }}
+       <dd> <textarea name=text rows=5 cols=40></textarea></dd>
+       <dt> {{ form.tag.label }}
+       <dd> {{ form.tag }}
+       <dd> {{ form.submit }}</dd>
+     </dl>
+  </form>
+     
+{% endblock %}
