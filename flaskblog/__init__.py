@@ -20,5 +20,4 @@ login_manager.init_app(app)
 from models import db
 db.app = app
 db.init_app(app)
-
 from flaskblog import views, models

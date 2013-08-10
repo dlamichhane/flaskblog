@@ -2,14 +2,16 @@
 from flaskblog import app, db, login_manager
 from flask import render_template, request, flash, url_for, g, session, redirect
 from form import LoginForm, PostForm, TagForm, SearchForm
-from models import db, Admin,Tag, Post, Pagination
+from models import db, Admin, Tag, Post, Pagination
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from config import PER_PAGE, MAX_SEARCH_RESULTS
+
 
 @app.route('/')
 @app.route('/index')
 def index():
 	return render_template('index.html')
+
 
 @app.route('/posts', defaults={'page': 1})
 @app.route('/posts/page/<int:page>')
@@ -21,19 +23,23 @@ def posts(page):
 	pagination = Pagination(page, PER_PAGE, count)
 	return render_template('posts.html', pagination=pagination, posts=posts)
 
+
 @app.route('/post/<int:id>')
 def post(id):
 	post = Post.query.filter_by(id=id).first()
 	return render_template('post.html', post=post)
 
+
 @login_manager.user_loader
 def load_user(user):
 	return Admin.query.get(user)
+
 
 @app.before_request
 def before_request():
 	g.user = current_user
 	g.search_form = SearchForm()
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -52,6 +58,7 @@ def logout():
 	logout_user()
 	return redirect(url_for("index"))
 
+
 @app.route('/addpost', methods=["GET", "POST"])
 @login_required
 def addpost():
@@ -69,6 +76,7 @@ def addpost():
       		flash('Posted successfully')
       		return render_template('index.html')
 	return render_template("addpost.html", form = form)
+
 
 @app.route('/editpost/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -94,6 +102,7 @@ def edit_post(id):
 		form.tag.choices = [(str(tag.id), str(tag.tag)) for tag in Tag.query.all()]
 		return render_template('editpost.html', post_id= post.id, form=form)
 
+
 @app.route('/deletepost/<int:id>')
 @login_required
 def delete_post(id):
@@ -101,6 +110,7 @@ def delete_post(id):
 	db.session.delete(post)
 	db.session.commit()
 	return render_template('index.html')
+
 
 @app.route('/addtag', methods=['GET', 'POST'])
 @login_required
@@ -117,6 +127,7 @@ def addtag():
 			return render_template('tags.html', tags = Tag.query.all())
 	return render_template("addtag.html", form=form)
 
+
 @app.route('/tags', methods=['GET', 'POST'])
 def tags():
 	tags = Tag.query.all()
@@ -124,6 +135,7 @@ def tags():
 		flash("No tag created yet")
 		return render_template('addtag.html')
 	return render_template('tags.html', tags=tags)
+
 
 @app.route('/tags/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -142,13 +154,14 @@ def edit_tag(id):
 		form = TagForm(id=tag.id, tag=tag.tag)
 		return render_template('edittag.html', tag_id= tag.id, form=form)
 
+
 @app.route('/delete_tag/<int:id>')
 @login_required
 def delete_tag(id):
-	tag = Tag.query.filter_by(id=id).first()
-	db.session.delete(tag)
-	db.session.commit()
-	return render_template('tags.html', tags = Tag.query.all())
+    tag = Tag.query.filter_by(id=id).first()
+    db.session.delete(tag)
+    db.session.commit()
+    return render_template('tags.html', tags = Tag.query.all())
 
 
 @app.route('/users/', defaults={'page': 1})
@@ -163,6 +176,7 @@ def show_users(page):
         pagination=pagination,
         users=users
     )
+
 
 @app.route('/search', methods=['POST'])
 @login_required

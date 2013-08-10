@@ -7,6 +7,7 @@ from math import ceil
 
 db = SQLAlchemy(app)
 
+
 class Admin(db.Model):
     __tablename__ = 'admin'
     id = db.Column(db.Integer, primary_key=True)
@@ -34,6 +35,7 @@ tags = db.Table('posts_tags',
     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
     db.Column('post_id', db.Integer, db.ForeignKey('posts.id'))
 )
+
 
 class Post(db.Model):
    __tablename__ = 'posts'
@@ -64,6 +66,7 @@ class Tag(db.Model):
     def __repr__(self):
         return '<Tag %r>' % self.tag
 
+
 class Pagination(object):
 
     def __init__(self, page, per_page, total_count):
@@ -90,10 +93,12 @@ class Pagination(object):
             if num <= left_edge or \
                (num > self.page - left_current - 1 and \
                 num < self.page + right_current) or \
-               num > self.pages - right_edge:
+                num > self.pages - right_edge:
+                
                 if last + 1 != num:
                     yield None
                 yield num
                 last = num
+
 
 whooshalchemy.whoosh_index(app, Post)
